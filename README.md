@@ -69,22 +69,23 @@ text
                     │
                     ▼
           Display Result UI
+
 🏗️ Project Architecture
 The application follows a modular Model-View-Controller (MVC) inspired architecture. The Model consists of the serialized Random Forest classifier and the data processing logic. The View is handled through Flask's Jinja2 templates, providing a dynamic frontend. The Controller (app.py) manages the routing, handles form submissions, and coordinates between the user input and the predictive engine.
 📊 Sample Output
 Status: ✅ Application Approved
 Decision Basis: High income stability, professional occupation, and positive asset ownership (Realty/Car) identified as key approval drivers.
 🚀 Installation
-Clone the repository
+1. Clone the repository
 Bash
 git clone https://github.com/YOUR_USERNAME/credit-card-approval.git
-Move into the project directory
+2. Move into the project directory
 Bash
-cd credit-card-approval/"5. Project Development Phase/credit_app"
-Install the required dependencies
+cd "5. Project Development Phase/credit_app"
+3. Install the required dependencies
 Bash
 pip install flask scikit-learn pandas numpy
-Run the application
+4. Run the application
 Bash
 python app.py
 🔮 Future Enhancements
@@ -99,4 +100,7 @@ This project was developed as part of the AI/ML & Generative AI Track. Team memb
 This project is intended for educational and academic purposes.
 Plain Text
 
-I've also included this file in the updated zip package I sent you earlier. You're all set for your GitHub submission! Is there anything else you need?
+### 💡 Important Note for Copying:
+When you copy the text above, make sure you include the **three backticks** ( \`\`\` ) at the beginning and end of each section. Those backticks are what tell GitHub to create the "gray boxes."
+
+Once you paste it, click the **"Preview"** tab in GitHub to make sure it looks exactly how you wa
