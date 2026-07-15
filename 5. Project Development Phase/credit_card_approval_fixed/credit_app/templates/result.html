@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Result – CreditPredict</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 48px;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .nav-brand { font-size: 1.25rem; font-weight: 700; color: #a78bfa; }
+
+    .nav-links a {
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      margin-left: 28px;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: #a78bfa; }
+
+    /* ── HERO ─────────────────────────────────────── */
+    .result-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 24px;
+    }
+
+    .result-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 24px;
+      padding: 60px 48px;
+      text-align: center;
+      max-width: 520px;
+      width: 100%;
+      backdrop-filter: blur(12px);
+      animation: fadeUp 0.45s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-icon {
+      font-size: 4.5rem;
+      margin-bottom: 24px;
+      display: block;
+      filter: drop-shadow(0 0 20px currentColor);
+    }
+
+    .result-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 6px 18px;
+      border-radius: 999px;
+      margin-bottom: 20px;
+    }
+
+    /* APPROVED */
+    .approved .result-badge {
+      background: rgba(52, 211, 153, 0.15);
+      border: 1px solid rgba(52, 211, 153, 0.4);
+      color: #6ee7b7;
+    }
+
+    .approved .result-icon { color: #34d399; }
+
+    .approved .result-headline {
+      background: linear-gradient(90deg, #6ee7b7, #34d399);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .approved .pulse-ring {
+      background: rgba(52, 211, 153, 0.12);
+      border: 2px solid rgba(52, 211, 153, 0.35);
+    }
+
+    /* REJECTED */
+    .rejected .result-badge {
+      background: rgba(248, 113, 113, 0.15);
+      border: 1px solid rgba(248, 113, 113, 0.4);
+      color: #fca5a5;
+    }
+
+    .rejected .result-icon { color: #f87171; }
+
+    .rejected .result-headline {
+      background: linear-gradient(90deg, #fca5a5, #f87171);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .rejected .pulse-ring {
+      background: rgba(248, 113, 113, 0.12);
+      border: 2px solid rgba(248, 113, 113, 0.35);
+    }
+
+    /* ── ICON WRAPPER ─────────────────────────────── */
+    .icon-wrap {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      margin: 0 auto 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pulse-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50%       { transform: scale(1.08); opacity: 0.6; }
+    }
+
+    /* ── TEXT ────────────────────────────────────── */
+    .result-headline {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .result-message {
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.7;
+      margin-bottom: 40px;
+    }
+
+    /* ── SUMMARY TABLE ───────────────────────────── */
+    .summary {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 14px;
+      padding: 20px 22px;
+      text-align: left;
+      margin-bottom: 36px;
+    }
+
+    .summary-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 14px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 20px;
+    }
+
+    .s-item label {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.35);
+      font-weight: 600;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .s-item span {
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.8);
+    }
+
+    /* ── BUTTONS ─────────────────────────────────── */
+    .btn-row {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 12px 28px;
+      border-radius: 12px;
+      box-shadow: 0 6px 24px rgba(124, 58, 237, 0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 32px rgba(124, 58, 237, 0.55);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: rgba(255,255,255,0.55);
+      border: 1px solid rgba(255,255,255,0.2);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 12px 24px;
+      border-radius: 12px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .btn-secondary:hover {
+      color: #fff;
+      border-color: rgba(255,255,255,0.5);
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <span class="nav-brand">💳 CreditPredict</span>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/predict">Predict</a>
+    </div>
+  </nav>
+
+  <div class="result-wrap">
+    <div class="result-card {{ 'approved' if result == 'Approved' else 'rejected' }}">
+
+      <div class="icon-wrap">
+        <div class="pulse-ring"></div>
+        <span class="result-icon">
+          {% if result == 'Approved' %}✅{% else %}❌{% endif %}
+        </span>
+      </div>
+
+      <div class="result-badge">
+        {% if result == 'Approved' %}Application Approved{% else %}Application Rejected{% endif %}
+      </div>
+
+      <h2 class="result-headline">{{ result }}</h2>
+
+      <p class="result-message">
+        {% if result == 'Approved' %}
+          Congratulations! Based on the provided financial and demographic
+          details, this credit card application is predicted to be
+          <strong>approved</strong>. The applicant meets the model's
+          risk criteria.
+        {% else %}
+          Based on the provided financial and demographic details, this
+          credit card application is predicted to be
+          <strong>rejected</strong>. The applicant does not meet the
+          model's current risk threshold.
+        {% endif %}
+      </p>
+
+      <!-- Key input summary -->
+      <div class="summary">
+        <div class="summary-title">Submitted Details</div>
+        <div class="summary-grid">
+          <div class="s-item">
+            <label>Income</label>
+            <span>${{ "{:,.0f}".format(inputs.AMT_INCOME_TOTAL | float) }}</span>
+          </div>
+          <div class="s-item">
+            <label>Income Type</label>
+            <span>{{ inputs.NAME_INCOME_TYPE }}</span>
+          </div>
+          <div class="s-item">
+            <label>Date of Birth</label>
+            <span>{{ inputs.DOB }}</span>
+          </div>
+          <div class="s-item">
+            <label>Employed Since</label>
+            <span>{{ inputs.EMP_DATE }}</span>
+          </div>
+          <div class="s-item">
+            <label>Education</label>
+            <span>{{ inputs.NAME_EDUCATION_TYPE }}</span>
+          </div>
+          <div class="s-item">
+            <label>Family Status</label>
+            <span>{{ inputs.NAME_FAMILY_STATUS }}</span>
+          </div>
+          <div class="s-item">
+            <label>Children</label>
+            <span>{{ inputs.CNT_CHILDREN }}</span>
+          </div>
+          <div class="s-item">
+            <label>Owns Car</label>
+            <span>{{ 'Yes' if inputs.FLAG_OWN_CAR == 'Y' else 'No' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <a href="/predict" class="btn-primary">Try Another</a>
+        <a href="/" class="btn-secondary">Back to Home</a>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

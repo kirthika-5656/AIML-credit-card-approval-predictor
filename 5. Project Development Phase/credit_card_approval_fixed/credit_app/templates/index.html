@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Predict – CreditPredict</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: #fff;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 48px;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .nav-brand {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #a78bfa;
+    }
+
+    .nav-links a {
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      margin-left: 28px;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: #a78bfa; }
+
+    /* ── FORM CONTAINER ──────────────────────────── */
+    .container {
+      max-width: 780px;
+      margin: 48px auto;
+      padding: 0 24px 60px;
+    }
+
+    .page-title {
+      font-size: 1.9rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+      background: linear-gradient(90deg, #fff, #c4b5fd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .page-sub {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 36px;
+    }
+
+    .form-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 40px 36px;
+      backdrop-filter: blur(10px);
+    }
+
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #a78bfa;
+      margin: 28px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(167, 139, 250, 0.25);
+    }
+
+    .section-label:first-child { margin-top: 0; }
+
+    /* ── GRID ────────────────────────────────────── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+    .col-full { grid-column: 1 / -1; }
+
+    @media (max-width: 600px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .form-card { padding: 28px 20px; }
+    }
+
+    /* ── FIELD ───────────────────────────────────── */
+    .field { display: flex; flex-direction: column; gap: 6px; }
+
+    label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.65);
+      letter-spacing: 0.3px;
+    }
+
+    input, select {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 0.92rem;
+      padding: 11px 14px;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+      width: 100%;
+    }
+
+    input::placeholder { color: rgba(255,255,255,0.3); }
+
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(1) opacity(0.5);
+      cursor: pointer;
+    }
+
+    select option { background: #1e1b4b; color: #fff; }
+
+    input:focus, select:focus {
+      border-color: #7c3aed;
+      background: rgba(124, 58, 237, 0.12);
+    }
+
+    input:invalid { border-color: rgba(248, 113, 113, 0.5); }
+
+    /* ── SUBMIT ──────────────────────────────────── */
+    .submit-row {
+      margin-top: 36px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 14px 40px;
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(124, 58, 237, 0.45);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(124, 58, 237, 0.6);
+    }
+
+    .btn-reset {
+      background: transparent;
+      color: rgba(255,255,255,0.5);
+      border: 1px solid rgba(255,255,255,0.2);
+      cursor: pointer;
+      font-size: 0.9rem;
+      padding: 13px 26px;
+      border-radius: 12px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .btn-reset:hover {
+      color: #fff;
+      border-color: rgba(255,255,255,0.5);
+    }
+
+    .hint {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.3);
+      margin-top: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <span class="nav-brand">💳 CreditPredict</span>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/predict">Predict</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1 class="page-title">Applicant Details</h1>
+    <p class="page-sub">Fill in all fields to generate an approval prediction.</p>
+
+    <div class="form-card">
+      <form action="/predict" method="POST">
+
+        <!-- ── PERSONAL ────────────────────────────── -->
+        <div class="section-label">Personal Information</div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label for="gender">Gender</label>
+            <select name="CODE_GENDER" id="gender" required>
+              <option value="" disabled selected>Select gender</option>
+              <option value="M">Male</option>
+              <option value="F">Female</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="children">Number of Children</label>
+            <input type="number" name="CNT_CHILDREN" id="children"
+                   min="0" max="20" placeholder="e.g. 2" required />
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-top:18px">
+          <div class="field">
+            <label for="family">Family Status</label>
+            <select name="NAME_FAMILY_STATUS" id="family" required>
+              <option value="" disabled selected>Select status</option>
+              <option>Married</option>
+              <option>Single / not married</option>
+              <option>Civil marriage</option>
+              <option>Separated</option>
+              <option>Widow</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="fam_members">Family Members</label>
+            <input type="number" name="CNT_FAM_MEMBERS" id="fam_members"
+                   min="1" max="20" step="0.5" placeholder="e.g. 3" required />
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-top:18px">
+          <div class="field">
+            <label for="dob">Date of Birth</label>
+            <input type="date" name="DOB" id="dob"
+                   max="" required />
+          </div>
+
+          <div class="field">
+            <label for="education">Education Level</label>
+            <select name="NAME_EDUCATION_TYPE" id="education" required>
+              <option value="" disabled selected>Select education</option>
+              <option>Higher education</option>
+              <option>Secondary / secondary special</option>
+              <option>Incomplete higher</option>
+              <option>Lower secondary</option>
+              <option>Academic degree</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- ── FINANCIAL ──────────────────────────── -->
+        <div class="section-label">Financial Information</div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label for="income">Annual Income (USD)</label>
+            <input type="number" name="AMT_INCOME_TOTAL" id="income"
+                   min="0" placeholder="e.g. 180000" required />
+          </div>
+
+          <div class="field">
+            <label for="income_type">Income Type</label>
+            <select name="NAME_INCOME_TYPE" id="income_type" required>
+              <option value="" disabled selected>Select type</option>
+              <option>Working</option>
+              <option>Commercial associate</option>
+              <option>Pensioner</option>
+              <option>State servant</option>
+              <option>Student</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-top:18px">
+          <div class="field">
+            <label for="occupation">Occupation Type</label>
+            <select name="OCCUPATION_TYPE" id="occupation" required>
+              <option value="" disabled selected>Select occupation</option>
+              <option>Accountants</option>
+              <option>Cleaning staff</option>
+              <option>Cooking staff</option>
+              <option>Core staff</option>
+              <option>Drivers</option>
+              <option>High skill tech staff</option>
+              <option>HR staff</option>
+              <option>IT staff</option>
+              <option>Laborers</option>
+              <option>Low-skill Laborers</option>
+              <option>Managers</option>
+              <option>Medicine staff</option>
+              <option>Private service staff</option>
+              <option>Realty agents</option>
+              <option>Sales staff</option>
+              <option>Secretaries</option>
+              <option>Security staff</option>
+              <option>Waiters/barmen staff</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="emp_date">Employment Start Date</label>
+            <input type="date" name="EMP_DATE" id="emp_date"
+                   max="" required />
+          </div>
+        </div>
+
+        <!-- ── ASSETS ──────────────────────────────── -->
+        <div class="section-label">Assets &amp; Housing</div>
+
+        <div class="grid-3">
+          <div class="field">
+            <label for="own_car">Owns a Car</label>
+            <select name="FLAG_OWN_CAR" id="own_car" required>
+              <option value="" disabled selected>Select</option>
+              <option value="Y">Yes</option>
+              <option value="N">No</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="own_realty">Owns Realty</label>
+            <select name="FLAG_OWN_REALTY" id="own_realty" required>
+              <option value="" disabled selected>Select</option>
+              <option value="Y">Yes</option>
+              <option value="N">No</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="housing">Housing Type</label>
+            <select name="NAME_HOUSING_TYPE" id="housing" required>
+              <option value="" disabled selected>Select</option>
+              <option>House / apartment</option>
+              <option>Rented apartment</option>
+              <option>Municipal apartment</option>
+              <option>With parents</option>
+              <option>Co-op apartment</option>
+              <option>Office apartment</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- ── CONTACT ────────────────────────────── -->
+        <div class="section-label">Contact &amp; Reachability</div>
+
+        <div class="grid-3">
+          <div class="field">
+            <label for="work_phone">Work Phone</label>
+            <select name="FLAG_WORK_PHONE" id="work_phone" required>
+              <option value="" disabled selected>Select</option>
+              <option value="1">Yes</option>
+              <option value="0">No</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="phone">Personal Phone</label>
+            <select name="FLAG_PHONE" id="phone" required>
+              <option value="" disabled selected>Select</option>
+              <option value="1">Yes</option>
+              <option value="0">No</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="email">Email</label>
+            <select name="FLAG_EMAIL" id="email" required>
+              <option value="" disabled selected>Select</option>
+              <option value="1">Yes</option>
+              <option value="0">No</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- ── SUBMIT ──────────────────────────────── -->
+        <div class="submit-row">
+          <button type="submit" class="btn-submit">Predict Approval →</button>
+          <button type="reset" class="btn-reset">Clear Form</button>
+        </div>
+        <p class="hint">* All fields are required. Negative day values represent past dates relative to today.</p>
+
+      </form>
+    </div>
+  </div>
+  <script>
+    // Set max date for both pickers to today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('dob').max = today;
+    document.getElementById('emp_date').max = today;
+
+    // Minimum DOB: 100 years ago
+    const minDob = new Date();
+    minDob.setFullYear(minDob.getFullYear() - 100);
+    document.getElementById('dob').min = minDob.toISOString().split('T')[0];
+
+    // Minimum employment: 50 years ago
+    const minEmp = new Date();
+    minEmp.setFullYear(minEmp.getFullYear() - 50);
+    document.getElementById('emp_date').min = minEmp.toISOString().split('T')[0];
+  </script>
+
+</body>
+</html>
