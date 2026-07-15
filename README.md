@@ -69,7 +69,7 @@ text
                     │
                     ▼
           Display Result UI
-
+--------------------------------------------------------------------------------------------------------------------
 🏗️ Project Architecture
 The application follows a modular Model-View-Controller (MVC) inspired architecture. The Model consists of the serialized Random Forest classifier and the data processing logic. The View is handled through Flask's Jinja2 templates, providing a dynamic frontend. The Controller (app.py) manages the routing, handles form submissions, and coordinates between the user input and the predictive engine.
 📊 Sample Output
